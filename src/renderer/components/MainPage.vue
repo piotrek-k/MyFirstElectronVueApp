@@ -3,7 +3,7 @@
     <div>
       {{fileContent}}
     </div>
-    <button v-on:click="open">Click here</button>
+    <button v-on:click='open'>Click here</button>
   </div>
 </template>
 
@@ -11,8 +11,10 @@
 import fs from 'fs'
 import path from 'path'
 export default {
-  data: {
-    fileContent: 'none'
+  data: function () {
+    return {
+      fileContent: ''
+    }
   },
   methods: {
     open: function () {

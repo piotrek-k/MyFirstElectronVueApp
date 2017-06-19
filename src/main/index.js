@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, globalShortcut } from 'electron'
 
 /**
  * Set `__static` path to static files in production
@@ -30,13 +30,40 @@ function createWindow () {
   mainWindow.on('closed', () => {
     mainWindow = null
   })
+
+  mainWindow.on('ready', () => {
+    mainWindow.focus()
+  })
+
+  /**
+   * Global shortcut registration
+   */
+
+  // Register a 'CommandOrControl+X' shortcut listener.
+  // https://github.com/electron/electron/blob/master/docs/api/accelerator.md
+  const ret = globalShortcut.register('CommandOrControl+Q', () => {
+    console.log('CommandOrControl+X is pressed')
+    if (mainWindow === null) {
+      createWindow()
+    } else {
+      mainWindow.focus()
+    }
+  })
+
+  if (!ret) {
+    console.log('registration failed')
+  }
+
+  // Check whether a shortcut is registered.
+  console.log('Global shortcut registered: ' + globalShortcut.isRegistered('CommandOrControl+X'))
 }
 
 app.on('ready', createWindow)
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
-    app.quit()
+    // Commented becuase we want to keep app in background
+    // app.quit()
   }
 })
 
